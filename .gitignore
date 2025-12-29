@@ -1,0 +1,45 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build
+target/
+build/
+*.jar
+*.war
+*.ear
+*.class
+
+# Logs
+*.log
+logs/
+build_log.txt
+compile-error.txt
+compile-output.txt
+
+# Dependencies
+node_modules/
+.m2/
+
+# Database
+*.db
+*.sqlite
+*.sql.bak
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temp files
+*.tmp
+*.temp
+.temp/
+
+# Project specific
+database_backup/
+*.bak

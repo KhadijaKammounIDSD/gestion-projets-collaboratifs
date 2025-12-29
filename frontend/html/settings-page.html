@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - TaskFlow</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .settings-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-section h2 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .settings-section h2 i {
+            color: #00a6c0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-add-small {
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-add-small:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 195, 220, 0.3);
+        }
+
+        /* Skills list */
+        #skills-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+
+        .skill-item:hover {
+            background: #f3f4f6;
+        }
+
+        /* Teams list */
+        #settings-teams-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .team-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .team-info i {
+            color: #8b5cf6;
+            font-size: 18px;
+        }
+
+        .team-members-count {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Projects list */
+        #settings-projects-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .project-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .project-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .project-info i {
+            color: #00a6c0;
+            font-size: 18px;
+        }
+
+        .project-status {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .status-in-progress {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-planned {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        /* Member item styles */
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .member-item:hover {
+            background: #f3f4f6;
+        }
+
+        .member-info-settings {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .member-info-settings i {
+            color: #00a6c0;
+            font-size: 18px;
+        }
+
+        .member-details-settings {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .member-actions-settings {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Danger zone */
+        .danger-zone {
+            border: 2px solid #fee2e2;
+            background: #fef2f2;
+        }
+
+        .danger-zone h2 {
+            color: #dc2626;
+        }
+
+        .danger-zone h2 i {
+            color: #dc2626;
+        }
+
+        .danger-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-danger {
+            background: white;
+            color: #dc2626;
+            border: 1px solid #dc2626;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #1f2937;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+        }
+
+        .btn-close:hover {
+            color: #1f2937;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00a6c0;
+            box-shadow: 0 0 0 3px rgba(0, 166, 192, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn-cancel {
+            background: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 195, 220, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard-page.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects-page.html" class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="tasks-page.html" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="members-page.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="teams-page.html" class="nav-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Teams</span>
+            </a>
+            <a href="timeline.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="alerts-page.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+                <span id="alert-count" style="display: none;">0</span>
+            </a>
+            <a href="settings-page.html" class="nav-item active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile-page.html" class="nav-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-cog"></i> Settings</h1>
+            </div>
+        </header>
+
+        <!-- Settings Content -->
+        <div class="settings-container">
+            <div class="page-header">
+                <h1>System Settings</h1>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Skills Management -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-star"></i> Skills Management</h2>
+                    <div class="section-header">
+                        <span>Available skills in the system</span>
+                        <button class="btn-add-small" onclick="openModal('add-skill-modal')">
+                            <i class="fas fa-plus"></i> Add Skill
+                        </button>
+                    </div>
+                    <div id="skills-list">
+                        <p class="empty-state">Loading skills...</p>
+                    </div>
+                </div>
+
+                <!-- Members Management -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-users-cog"></i> Members Management</h2>
+                    <div class="section-header">
+                        <span>Manage system members</span>
+                        <button class="btn-add-small" onclick="window.location.href='members-page.html'">
+                            <i class="fas fa-external-link-alt"></i> View All
+                        </button>
+                    </div>
+                    <div id="settings-members-list">
+                        <p class="empty-state">Loading members...</p>
+                    </div>
+                </div>
+
+                <!-- Teams Management -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-users"></i> Teams Management</h2>
+                    <div class="section-header">
+                        <span>All teams in the system</span>
+                        <button class="btn-add-small" onclick="openModal('add-team-modal')">
+                            <i class="fas fa-plus"></i> Add Team
+                        </button>
+                    </div>
+                    <div id="settings-teams-list">
+                        <p class="empty-state">Loading teams...</p>
+                    </div>
+                </div>
+
+                <!-- Projects Overview -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-project-diagram"></i> Projects Overview</h2>
+                    <div class="section-header">
+                        <span>All projects in the system</span>
+                        <button class="btn-add-small" onclick="window.location.href='projects-page.html'">
+                            <i class="fas fa-external-link-alt"></i> Manage
+                        </button>
+                    </div>
+                    <div id="settings-projects-list">
+                        <p class="empty-state">Loading projects...</p>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+                    <p style="margin-bottom: 20px; color: #6b7280; font-size: 14px;">
+                        These actions are irreversible. Please be careful.
+                    </p>
+                    <div class="danger-actions">
+                        <button class="btn-danger" onclick="clearAllAlerts()">
+                            <i class="fas fa-bell-slash"></i>
+                            Clear All Alerts
+                        </button>
+                        <button class="btn-danger" onclick="resetDatabase()">
+                            <i class="fas fa-database"></i>
+                            Reset Sample Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Skill Modal -->
+    <div id="add-skill-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Skill</h2>
+                <button class="btn-close" onclick="closeModal('add-skill-modal')">&times;</button>
+            </div>
+            <form id="add-skill-form">
+                <div class="form-group">
+                    <label for="skill-name">Skill Name *</label>
+                    <input type="text" id="skill-name" name="name" required placeholder="e.g., JavaScript, Python, UI/UX">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('add-skill-modal')">Cancel</button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Add Skill
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Team Modal -->
+    <div id="add-team-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Team</h2>
+                <button class="btn-close" onclick="closeModal('add-team-modal')">&times;</button>
+            </div>
+            <form id="add-team-form">
+    <script src="../js/api-client.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        // API_BASE_URL is already defined in api-client.js
+        
+        let allTeams = [];
+        let isRefreshing = false;
+        
+        // Auto-refresh when page becomes visible again (prevents stale data)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && !isRefreshing) {
+                console.log('Settings page became visible, refreshing all data from database...');
+                refreshAllSettings();
+            }
+        });
+        
+        // Auto-refresh every 30 seconds to stay synced with database
+        setInterval(function() {
+            if (!document.hidden && !isRefreshing) {
+                console.log('Periodic refresh: fetching fresh settings data from database...');
+                refreshAllSettings();
+            }
+        }, 30000);
+        
+        // Global refresh function for external calls
+        window.refreshSettingsPage = async function() {
+            console.log('Settings page refresh triggered externally');
+            await refreshAllSettings();
+        };
+        
+        // Listen for storage events to refresh when data changes in other windows/tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'teamDataChanged') {
+                console.log('Team data changed in another window, refreshing...');
+                refreshAllSettings();
+            }
+        });
+        
+        async function refreshAllSettings() {
+            if (isRefreshing) return;
+            isRefreshing = true;
+            try {
+                await Promise.all([
+                    loadSettingsSkills(),
+                    loadSettingsMembers(),
+                    loadSettingsTeams(),
+                    loadSettingsProjects()
+                ]);
+            } finally {
+                isRefreshing = false;
+            }
+        }
+        
+        // Modal functions
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // Load settings data on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await refreshAllSettings();
+
+            // Add Skill Form Handler
+            document.getElementById('add-skill-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const skillName = document.getElementById('skill-name').value.trim();
+                
+                if (!skillName) {
+                    alert('⚠️ Skill name is required!');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/skills`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: skillName })
+                    });
+
+                    if (response.ok) {
+                        alert('✅ Skill added successfully!');
+                        closeModal('add-skill-modal');
+                        this.reset();
+                        // Force immediate refresh
+                        isRefreshing = false;
+                        await loadSettingsSkills();
+                        // Broadcast change
+                        localStorage.setItem('teamDataChanged', Date.now().toString());
+                    } else {
+                        alert('❌ Error adding skill');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error');
+                }
+            });
+
+            // Add Team Form Handler
+            document.getElementById('add-team-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const teamName = document.getElementById('team-name').value.trim();
+                
+                if (!teamName) {
+                    alert('⚠️ Team name is required!');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/teams`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: teamName })
+                    });
+
+                    if (response.ok) {
+                        alert('✅ Team added successfully!');
+                        closeModal('add-team-modal');
+                        this.reset();
+                        // Force immediate refresh
+                        isRefreshing = false;
+                        await refreshAllSettings();
+                        // Broadcast change
+                        localStorage.setItem('teamDataChanged', Date.now().toString());
+                        // Also notify teams page if it's open
+                        if (typeof window.refreshTeamsPage === 'function') {
+                            window.refreshTeamsPage();
+                        }
+                    } else {
+                        alert('❌ Error adding team');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error');
+                }
+            });
+
+            // Edit Team Form Handler
+            document.getElementById('edit-team-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const teamId = this.querySelector('input[name="id"]').value;
+                const teamName = document.getElementById('edit-team-name').value.trim();
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/teams`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: parseInt(teamId), name: teamName })
+                    });
+
+                    if (response.ok) {
+                        alert('✅ Team updated successfully!');
+                        closeModal('edit-team-modal');
+                        await loadSettingsTeams();
+                    } else {
+                        alert('❌ Error updating team');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error');
+                }
+            });
+
+        });
+
+        async function loadSettingsMembers() {
+            try {
+                console.log('🔄 Loading members from API...');
+                // Fetch fresh data directly from database with cache-busting timestamp
+                const timestamp = new Date().getTime();
+                const [members, teams] = await Promise.all([
+                    fetch(`${API_BASE_URL}/members?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Members response:', r.status);
+                        return r.json();
+                    }),
+                    fetch(`${API_BASE_URL}/teams?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Teams response:', r.status);
+                        return r.json();
+                    })
+                ]);
+                
+                console.log('📊 Loaded', members.length, 'members and', teams.length, 'teams');
+                allTeams = teams;
+                
+                const container = document.getElementById('settings-members-list');
+                container.innerHTML = '';
+                
+                if (members.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No members found.</p>';
+                    return;
+                }
+                
+                members.forEach(member => {
+                    const team = teams.find(t => t.id === member.teamId);
+                    const item = document.createElement('div');
+                    item.className = 'member-item';
+                    item.innerHTML = `
+                        <div class="member-info-settings">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <strong>${member.firstName} ${member.lastName}</strong>
+                                <div class="member-details-settings">
+                                    ${member.email} • ${member.role || 'N/A'}
+                                    ${team ? ` • Team: ${team.name}` : ' • No team'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-actions-settings">
+                            <button onclick="deleteMemberFromSettings(${member.id}, '${member.firstName} ${member.lastName}')" 
+                                style="background: #fee2e2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading members:', error);
+                document.getElementById('settings-members-list').innerHTML = '<p class="empty-state">Error loading members</p>';
+            }
+        }
+
+        async function deleteMemberFromSettings(memberId, memberName) {
+            if (!confirm(`Are you sure you want to remove ${memberName} from the system? This action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/members?id=${memberId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('✅ Member removed successfully!');
+                    // Force immediate refresh
+                    isRefreshing = false;
+                    await refreshAllSettings();
+                    // Also notify teams page if it's open
+                    if (typeof window.refreshTeamsPage === 'function') {
+                        window.refreshTeamsPage();
+                    }
+                } else {
+                    alert('❌ Error removing member');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Server error');
+            }
+        }
+
+        // Add Team Form Handler - defined in DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', async function() {
+            await refreshAllSettings();
+
+            // Add Team Form Handler
+            document.getElementById('add-team-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const teamName = document.getElementById('team-name').value.trim();
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/teams`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: teamName })
+                    });
+
+                    if (response.ok) {
+                        alert('✅ Team added successfully!');
+                        closeModal('add-team-modal');
+                        this.reset();
+                        await loadSettingsTeams();
+                    } else {
+                        alert('❌ Error adding team');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error');
+                }
+            });
+
+            // Edit Team Form Handler
+            document.getElementById('edit-team-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const teamId = this.querySelector('input[name="id"]').value;
+                const teamName = document.getElementById('edit-team-name').value.trim();
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/teams`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: parseInt(teamId), name: teamName })
+                    });
+
+                    if (response.ok) {
+                        alert('✅ Team updated successfully!');
+                        closeModal('edit-team-modal');
+                        await loadSettingsTeams();
+                    } else {
+                        alert('❌ Error updating team');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error');
+                }
+            });
+        });
+
+        async function loadSettingsSkills() {
+            try {
+                // Fetch fresh data directly from database with cache-busting timestamp
+                const timestamp = new Date().getTime();
+                const response = await fetch(`${API_BASE_URL}/skills?_t=${timestamp}`, {
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                });
+                const skills = await response.json();
+                
+                const container = document.getElementById('skills-list');
+                container.innerHTML = '';
+                
+                if (skills.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No skills found. Add your first skill!</p>';
+                    return;
+                }
+                
+                skills.forEach(skill => {
+                    const item = document.createElement('div');
+                    item.className = 'skill-item';
+                    item.innerHTML = `
+                        <span class="skill-name">${skill.name}</span>
+                        <button onclick="deleteSkill(${skill.id})" class="btn-delete-small" style="background: #fee2e2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading skills:', error);
+                document.getElementById('skills-list').innerHTML = '<p class="empty-state">Error loading skills</p>';
+            }
+        }
+
+        async function deleteSkill(id) {
+            if (!confirm('Delete this skill? This will affect tasks and members using it.')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/skills?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('✅ Skill deleted successfully!');
+                    await loadSettingsSkills();
+                } else {
+                    alert('❌ Error deleting skill');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Server error');
+            }
+        }
+
+        async function editTeam(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/teams?id=${id}`);
+                const team = await response.json();
+                
+                document.querySelector('#edit-team-form input[name="id"]').value = team.id;
+                document.getElementById('edit-team-name').value = team.name;
+                openModal('edit-team-modal');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading team details');
+            }
+        }
+
+        async function deleteTeam(id) {
+            if (!confirm('Delete this team? Members will be unassigned from this team.')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/teams?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('✅ Team deleted successfully!');
+                    await loadSettingsTeams();
+                } else {
+                    alert('❌ Error deleting team');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Server error');
+            }
+        }
+
+        async function loadSettingsTeams() {
+            try {
+                console.log('🔄 Loading teams from API...');
+                // Fetch fresh data directly from database with cache-busting timestamp
+                const timestamp = new Date().getTime();
+                const [teams, members, tasks] = await Promise.all([
+                    fetch(`${API_BASE_URL}/teams?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Teams response:', r.status);
+                        return r.json();
+                    }),
+                    fetch(`${API_BASE_URL}/members?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Members response:', r.status);
+                        return r.json();
+                    }),
+                    fetch(`${API_BASE_URL}/tasks?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Tasks response:', r.status);
+                        return r.json();
+                    })
+                ]);
+                
+                console.log('📊 Loaded', teams.length, 'teams,', members.length, 'members,', tasks.length, 'tasks');
+                
+                const container = document.getElementById('settings-teams-list');
+                container.innerHTML = '';
+                
+                if (teams.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No teams found. Create your first team!</p>';
+                    return;
+                }
+                
+                teams.forEach(team => {
+                    const teamMembers = members.filter(m => m.teamId === team.id);
+                    const memberIds = teamMembers.map(m => m.id);
+                    const teamTasks = tasks.filter(t => t.assigneeId && memberIds.includes(t.assigneeId));
+                    
+                    const item = document.createElement('div');
+                    item.className = 'team-item';
+                    item.innerHTML = `
+                        <div class="team-info">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <strong>${team.name}</strong>
+                                <div class="team-members-count">
+                                    ${teamMembers.length} members • ${teamTasks.length} tasks assigned
+                                    ${teamMembers.length > 0 ? `<br><span style="font-size: 10px; color: #9ca3af;">${teamMembers.map(m => m.firstName + ' ' + m.lastName).join(', ')}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="editTeam(${team.id})" style="background: #f3f4f6; color: #00a6c0; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteTeam(${team.id})" style="background: #fee2e2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading teams:', error);
+                document.getElementById('settings-teams-list').innerHTML = '<p class="empty-state">Error loading teams</p>';
+            }
+        }
+
+        async function loadSettingsProjects() {
+            try {
+                console.log('🔄 Loading projects from API...');
+                // Fetch fresh data directly from database with cache-busting timestamp
+                const timestamp = new Date().getTime();
+                const [projects, tasks, members] = await Promise.all([
+                    fetch(`${API_BASE_URL}/projects?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Projects response:', r.status);
+                        return r.json();
+                    }),
+                    fetch(`${API_BASE_URL}/tasks?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Tasks response:', r.status);
+                        return r.json();
+                    }),
+                    fetch(`${API_BASE_URL}/members?_t=${timestamp}`, {
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    }).then(r => {
+                        console.log('✅ Members response:', r.status);
+                        return r.json();
+                    })
+                ]);
+                
+                console.log('📊 Loaded', projects.length, 'projects,', tasks.length, 'tasks,', members.length, 'members');
+                
+                const container = document.getElementById('settings-projects-list');
+                container.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No projects found. Create your first project!</p>';
+                    return;
+                }
+                
+                projects.forEach(project => {
+                    const statusClass = (project.status || '').toLowerCase().replace(/\s+/g, '-');
+                    const projectTasks = tasks.filter(t => t.projectId === project.id);
+                    const assignedTasks = projectTasks.filter(t => t.assigneeId);
+                    const projectMembers = [...new Set(assignedTasks.map(t => t.assigneeId))]
+                        .map(id => members.find(m => m.id === id))
+                        .filter(m => m);
+                    
+                    const item = document.createElement('div');
+                    item.className = 'project-item';
+                    item.innerHTML = `
+                        <div class="project-info">
+                            <i class="fas fa-folder"></i>
+                            <div>
+                                <strong>${project.name}</strong>
+                                <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">
+                                    ${projectTasks.length} tasks • ${projectMembers.length} members working
+                                    ${projectMembers.length > 0 ? `<br>${projectMembers.map(m => m.firstName + ' ' + m.lastName).join(', ')}` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <span class="project-status status-${statusClass}">${project.status || 'N/A'}</span>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('settings-projects-list').innerHTML = '<p class="empty-state">Error loading projects</p>';
+            }
+        }
+
+        async function clearAllAlerts() {
+            if (!confirm('Are you sure you want to clear all alerts? This action cannot be undone.')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/alerts`);
+                const alerts = await response.json();
+                
+                for (const alert of alerts) {
+                    await fetch(`${API_BASE_URL}/alerts?id=${alert.id}`, { method: 'DELETE' });
+                }
+                alert('✅ All alerts cleared!');
+            } catch (error) {
+                alert('❌ Error clearing alerts');
+            }
+        }
+
+        function resetDatabase() {
+            alert('This feature would reset the database to sample data. For safety, this is disabled in production.');
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login-page.html';
+        }
+    </script>
+</body>
+
+</html>

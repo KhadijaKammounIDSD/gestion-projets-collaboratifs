@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management - TaskFlow</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .projects-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 195, 220, 0.3);
+        }
+
+        #projects-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-card.expanded {
+            cursor: default;
+        }
+
+        .project-card h3 {
+            font-size: 20px;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .project-card p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .project-dates {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: #1f2937;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Project Details Styles */
+        .project-details {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            display: none;
+        }
+
+        .project-details.visible {
+            display: block;
+        }
+
+        .details-section {
+            margin-bottom: 20px;
+        }
+
+        .details-section h4 {
+            font-size: 14px;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-list-item {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-list-item .task-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .task-list-item .task-meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .task-list-item .duration {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .empty-message {
+            color: #9ca3af;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .task-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-assigned {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-unassigned {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard-page.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects-page.html" class="nav-item active">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="tasks-page.html" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="members-page.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="teams-page.html" class="nav-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Teams</span>
+            </a>
+            <a href="timeline.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="alerts-page.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="settings-page.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile-page.html" class="nav-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="projects-container">
+            <div class="page-header">
+                <h1><i class="fas fa-project-diagram"></i> Project Management</h1>
+                <button class="btn-add" onclick="openModal('add-project-modal')">
+                    <i class="fas fa-plus"></i> Create Project
+                </button>
+            </div>
+
+            <div id="projects-list">
+                <!-- Projects will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Project Modal -->
+    <div id="add-project-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Project</h2>
+                <button class="btn-close" onclick="closeModal('add-project-modal')">&times;</button>
+            </div>
+
+            <form id="add-project-form" data-custom-submit="true">
+                <div class="form-group">
+                    <label for="project-name">Project name *</label>
+                    <input type="text" id="project-name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-description">Description</label>
+                    <textarea id="project-description" name="description"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="project-startDate">Start date</label>
+                        <input type="date" id="project-startDate" name="startDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project-endDate">End date</label>
+                        <input type="date" id="project-endDate" name="endDate">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('add-project-modal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Create
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api-client.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        let allMembers = [];
+        let allTasks = [];
+        
+        // Expose refresh function globally
+        window.refreshProjectsPage = loadProjects;
+        
+        // Listen for storage events to refresh when data changes
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'teamDataChanged' || e.key === 'projectDataChanged') {
+                console.log('Data changed, refreshing projects page...');
+                loadProjects();
+            }
+        });
+        
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        async function loadProjects() {
+            const container = document.getElementById('projects-list');
+            try {
+                // Use cache-busting timestamp to ensure fresh data from database
+                const timestamp = new Date().getTime();
+                const [projects, tasks, members] = await Promise.all([
+                    fetch(`${API_BASE_URL}/projects?_t=${timestamp}`).then(r => r.json()),
+                    fetch(`${API_BASE_URL}/tasks?_t=${timestamp}`).then(r => r.json()),
+                    fetch(`${API_BASE_URL}/members?_t=${timestamp}`).then(r => r.json())
+                ]);
+                
+                allTasks = tasks;
+                allMembers = members;
+
+                if (projects.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-folder-open"></i><p>No projects yet. Click "Create Project" to get started.</p></div>';
+                    return;
+                }
+
+                container.innerHTML = projects.map(p => {
+                    const projectTasks = tasks.filter(t => t.projectId === p.id);
+                    const assignedTasks = projectTasks.filter(t => t.assigneeId);
+                    
+                    return `
+                        <div class="project-card" data-project-id="${p.id}" onclick="toggleProjectDetails(${p.id})">
+                            <h3>${p.name}</h3>
+                            <p>${p.description || 'No description'}</p>
+                            <div class="project-dates">
+                                <span><i class="fas fa-calendar-alt"></i> ${p.startDate || 'Not set'}</span>
+                                <span><i class="fas fa-calendar-check"></i> ${p.endDate || 'Not set'}</span>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span class="badge">${p.status || 'In Progress'}</span>
+                                <span style="font-size: 12px; color: #6b7280;">
+                                    ${projectTasks.length} tasks (${assignedTasks.length} assigned)
+                                </span>
+                            </div>
+                            
+                            <div class="project-details" id="project-details-${p.id}">
+                                <div class="details-section">
+                                    <h4><i class="fas fa-tasks"></i> Project Tasks & Assignments</h4>
+                                    <div id="project-tasks-${p.id}">
+                                        ${getProjectTasksHTML(projectTasks, members)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                container.innerHTML = '<div class="empty-state">Error loading projects</div>';
+            }
+        }
+
+        function getProjectTasksHTML(tasks, members) {
+            if (tasks.length === 0) {
+                return '<p class="empty-message">No tasks for this project yet</p>';
+            }
+            
+            return tasks.map(task => {
+                const assignee = task.assigneeId ? members.find(m => m.id === task.assigneeId) : null;
+                const statusClass = assignee ? 'status-assigned' : 'status-unassigned';
+                const statusText = assignee ? 'Assigned' : 'Unassigned';
+                
+                return `
+                    <div class="task-list-item">
+                        <div>
+                            <div class="task-name">
+                                ${task.name}
+                                <span class="task-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="task-meta">
+                                ${assignee ? 
+                                    `<i class="fas fa-user"></i> ${assignee.firstName} ${assignee.lastName}` : 
+                                    '<i class="fas fa-user-slash"></i> No assignee'
+                                }
+                                ${task.priority ? ` • Priority: ${task.priority}` : ''}
+                            </div>
+                        </div>
+                        <span class="duration">${task.estimatedDuration || 0}h</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleProjectDetails(projectId) {
+            const detailsDiv = document.getElementById(`project-details-${projectId}`);
+            const card = document.querySelector(`[data-project-id="${projectId}"]`);
+            
+            if (detailsDiv.classList.contains('visible')) {
+                detailsDiv.classList.remove('visible');
+                card.classList.remove('expanded');
+            } else {
+                // Close all other expanded cards
+                document.querySelectorAll('.project-details.visible').forEach(d => d.classList.remove('visible'));
+                document.querySelectorAll('.project-card.expanded').forEach(c => c.classList.remove('expanded'));
+                
+                detailsDiv.classList.add('visible');
+                card.classList.add('expanded');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadProjects();
+
+            // Form submission handler
+            document.getElementById('add-project-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const projectData = {
+                    name: document.getElementById('project-name').value.trim(),
+                    description: document.getElementById('project-description').value.trim(),
+                    startDate: document.getElementById('project-startDate').value || null,
+                    endDate: document.getElementById('project-endDate').value || null,
+                    status: 'In Progress'
+                };
+
+                if (!projectData.name) {
+                    alert('⚠️ Project name is required!');
+                    return;
+                }
+
+                try {
+                    const result = await API.createProject(projectData);
+                    if (result) {
+                        alert('✅ Project created successfully!');
+                        closeModal('add-project-modal');
+                        this.reset();
+                        await loadProjects();
+                        // Broadcast change
+                        localStorage.setItem('projectDataChanged', Date.now().toString());
+                    } else {
+                        alert('❌ Error creating project');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error: ' + error.message);
+                }
+            });
+        });
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login-page.html';
+        }
+    </script>
+</body>
+
+</html>

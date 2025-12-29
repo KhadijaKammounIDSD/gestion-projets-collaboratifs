@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #1f2937;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #1f2937;
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px;
+    margin-bottom: 32px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.logo i {
+    font-size: 24px;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #9ca3af;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.nav-item i {
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 240px;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+
+/* Content */
+.content {
+    padding: 0;
+}
+
+/* Profile Section */
+.profile-section {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin: 0 40px 30px 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+    flex: 0 0 200px;
+}
+
+.large-avatar {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #0a8fa3, #00a6c0);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 48px;
+}
+
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-item label {
+    font-size: 13px;
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-item p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Skills Section */
+.skills-section {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin: 0 40px 40px 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.skills-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.add-skill-btn {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.add-skill-btn:hover {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+.skills-container {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.skill-tag {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background: #e5e7eb;
+    color: #4b5563;
+    cursor: default;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+    }
+
+    .sidebar .logo span,
+    .nav-item span {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 60px;
+    }
+
+    .content {
+        padding: 24px;
+    }
+
+    .content h1 {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .profile-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        margin: 0 16px 20px 16px;
+        padding: 24px;
+    }
+
+    .skills-section {
+        margin: 0 16px 20px 16px;
+        padding: 24px;
+    }
+
+    .large-avatar {
+        width: 120px;
+        height: 120px;
+        font-size: 36px;
+    }
+}

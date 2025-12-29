@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management - TaskFlow</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tasks-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-add,
+        .btn-auto {
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 195, 220, 0.3);
+        }
+
+        .btn-auto {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-add:hover,
+        .btn-auto:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 195, 220, 0.4);
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        #tasks-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #00a6c0;
+        }
+
+        .task-card.priority-haute {
+            border-left-color: #ef4444;
+        }
+
+        .task-card.priority-moyenne {
+            border-left-color: #f59e0b;
+        }
+
+        .task-card.priority-faible {
+            border-left-color: #10b981;
+        }
+
+        .task-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .task-header h3 {
+            font-size: 18px;
+            color: #1f2937;
+            flex: 1;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-haute {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-moyenne {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .badge-faible {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .task-description {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .task-meta span {
+            font-size: 13px;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .task-meta i {
+            color: #00a6c0;
+        }
+
+        .status-planifiée {
+            color: #3b82f6;
+        }
+
+        .status-en_cours {
+            color: #f59e0b;
+        }
+
+        .status-terminée {
+            color: #10b981;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn-assign,
+        .btn-delete {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-assign {
+            background: #f3f4f6;
+            color: #00a6c0;
+        }
+
+        .btn-assign:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: #1f2937;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00a6c0;
+            box-shadow: 0 0 0 3px rgba(0, 166, 192, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard-page.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects-page.html" class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="tasks-page.html" class="nav-item active">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="members-page.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="teams-page.html" class="nav-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Teams</span>
+            </a>
+            <a href="timeline.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="alerts-page.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="settings-page.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile-page.html" class="nav-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="tasks-container">
+            <div class="page-header">
+                <h1><i class="fas fa-tasks"></i> Task Management</h1>
+                <div class="header-actions">
+                    <button class="btn-auto" id="auto-assign-btn" onclick="runAutoAssignment()">
+                        🤖 Auto Assignment
+                    </button>
+                    <button class="btn-auto" style="background: linear-gradient(135deg, #ef4444, #f87171);" onclick="createUrgentTask()">
+                        ⚡ Add Urgent Task
+                    </button>
+                    <button class="btn-add" onclick="openModal('add-task-modal')">
+                        <i class="fas fa-plus"></i> Create Task
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>Priority</label>
+                    <select id="filter-priority" onchange="filterTasks()">
+                        <option value="">All</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="filter-status" onchange="filterTasks()">
+                        <option value="">All</option>
+                        <option value="Planned">Planned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Sort by</label>
+                    <select id="sort-tasks" onchange="sortTasks()">
+                        <option value="priority">Priority</option>
+                        <option value="date">Date</option>
+                        <option value="duration">Duration</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="tasks-list">
+                <!-- Tasks will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Task</h2>
+                <button class="btn-close" onclick="closeModal('add-task-modal')">&times;</button>
+            </div>
+
+            <form id="add-task-form" data-custom-submit="true">
+                <div class="form-group">
+                    <label for="projectId">Project *</label>
+                    <select id="projectId" name="projectId" required>
+                        <option value="">-- Select a project --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Task name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="estimatedDuration">Estimated duration (hours) *</label>
+                        <input type="number" id="estimatedDuration" name="estimatedDuration" min="0.5" step="0.5"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority">Priority *</label>
+                        <select id="priority" name="priority" required>
+                            <option value="High">High</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="plannedStartDate">Start date</label>
+                        <input type="date" id="plannedStartDate" name="plannedStartDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plannedEndDate">End date</label>
+                        <input type="date" id="plannedEndDate" name="plannedEndDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="skill-search">Required Skills</label>
+                    
+                    <!-- Selected Skills Display -->
+                    <div id="selected-skills" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; min-height: 36px; padding: 8px; background: #f9fafb; border-radius: 6px; border: 1px solid #e5e7eb;">
+                        <!-- Selected skill chips will appear here -->
+                    </div>
+                    
+                    <!-- Search Input with Autocomplete -->
+                    <div style="position: relative;">
+                        <input type="text" id="skill-search" placeholder="Type to search skills..." style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        <div id="skill-dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #d1d5db; border-top: none; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <!-- Matching skills will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('add-task-modal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Create
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="btn-close" onclick="closeModal('edit-task-modal')">&times;</button>
+            </div>
+
+            <form id="edit-task-form" data-custom-submit="true">
+                <input type="hidden" id="edit-task-id" name="id">
+
+                <div class="form-group">
+                    <label for="edit-projectId">Project *</label>
+                    <select id="edit-projectId" name="projectId" required>
+                        <option value="">-- Select a project --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-name">Task name *</label>
+                    <input type="text" id="edit-name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-description">Description</label>
+                    <textarea id="edit-description" name="description"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-estimatedDuration">Estimated duration (hours) *</label>
+                        <input type="number" id="edit-estimatedDuration" name="estimatedDuration" min="0.5" step="0.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-priority">Priority *</label>
+                        <select id="edit-priority" name="priority" required>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-plannedStartDate">Start date</label>
+                        <input type="date" id="edit-plannedStartDate" name="plannedStartDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-plannedEndDate">End date</label>
+                        <input type="date" id="edit-plannedEndDate" name="plannedEndDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-status">Status</label>
+                    <select id="edit-status" name="status">
+                        <option value="Planned">Planned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-skill-search">Required Skills</label>
+                    
+                    <!-- Selected Skills Display -->
+                    <div id="edit-selected-skills" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; min-height: 36px; padding: 8px; background: #f9fafb; border-radius: 6px; border: 1px solid #e5e7eb;">
+                        <!-- Selected skill chips will appear here -->
+                    </div>
+                    
+                    <!-- Search Input with Autocomplete -->
+                    <div style="position: relative;">
+                        <input type="text" id="edit-skill-search" placeholder="Type to search skills..." style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        <div id="edit-skill-dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #d1d5db; border-top: none; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <!-- Matching skills will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('edit-task-modal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api-client.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        let allTasks = [];
+        let allSkills = [];
+        let selectedSkills = [];
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+            if (id === 'add-task-modal') {
+                loadProjectsDropdown();
+                loadSkillsForSearch();
+                selectedSkills = [];
+                updateSelectedSkillsDisplay();
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        async function loadProjectsDropdown() {
+            const select = document.getElementById('projectId');
+            try {
+                const projects = await API.getAllProjects();
+                select.innerHTML = '<option value="">-- Select a project --</option>';
+                projects.forEach(p => {
+                    select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        async function loadSkillsForSearch() {
+            try {
+                allSkills = await API.getAllSkills();
+            } catch (error) {
+                console.error('Error loading skills:', error);
+            }
+        }
+
+        function updateSelectedSkillsDisplay() {
+            const container = document.getElementById('selected-skills');
+            
+            if (selectedSkills.length === 0) {
+                container.innerHTML = '<span style="color: #9ca3af; font-size: 13px;">No skills selected yet</span>';
+                return;
+            }
+
+            container.innerHTML = selectedSkills.map(skill => `
+                <div style="display: flex; align-items: center; gap: 6px; background: #00a6c0; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px;">
+                    <span>${skill.name}</span>
+                    <button type="button" onclick="removeSkill(${skill.id})" style="background: none; border: none; color: white; cursor: pointer; padding: 0; display: flex; align-items: center;">
+                        <i class="fas fa-trash-alt" style="font-size: 11px;"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeSkill(skillId) {
+            selectedSkills = selectedSkills.filter(s => s.id !== skillId);
+            updateSelectedSkillsDisplay();
+        }
+
+        function selectSkill(skillId) {
+            const skill = allSkills.find(s => s.id === skillId);
+            if (skill && !selectedSkills.find(s => s.id === skillId)) {
+                selectedSkills.push(skill);
+                updateSelectedSkillsDisplay();
+                document.getElementById('skill-search').value = '';
+                document.getElementById('skill-dropdown').style.display = 'none';
+            }
+        }
+
+        // Skill search and autocomplete
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('skill-search');
+            const dropdown = document.getElementById('skill-dropdown');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (!query) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                const matches = allSkills.filter(skill => 
+                    skill.name.toLowerCase().includes(query) &&
+                    !selectedSkills.find(s => s.id === skill.id)
+                );
+
+                if (matches.length === 0) {
+                    dropdown.innerHTML = '<div style="padding: 12px; color: #9ca3af; font-size: 13px;">No matching skills found</div>';
+                    dropdown.style.display = 'block';
+                } else {
+                    dropdown.innerHTML = matches.map(skill => `
+                        <div onclick="selectSkill(${skill.id})" style="padding: 10px 12px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f3f4f6; transition: background 0.2s;" 
+                             onmouseover="this.style.background='#f9fafb'" 
+                             onmouseout="this.style.background='white'">
+                            ${skill.name}
+                        </div>
+                    `).join('');
+                    dropdown.style.display = 'block';
+                }
+            });
+
+            searchInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    dropdown.style.display = 'none';
+                }, 200);
+            });
+
+            searchInput.addEventListener('focus', function() {
+                if (this.value) {
+                    this.dispatchEvent(new Event('input'));
+                }
+            });
+        });
+
+        async function loadTasks() {
+            const container = document.getElementById('tasks-list');
+            try {
+                allTasks = await API.getAllTasks();
+                displayTasks(allTasks);
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                container.innerHTML = '<div class="empty-state">Error loading tasks</div>';
+            }
+        }
+
+        function displayTasks(tasks) {
+            const container = document.getElementById('tasks-list');
+
+            if (tasks.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>No tasks yet. Click "Create Task" to get started.</p></div>';
+                return;
+            }
+
+            container.innerHTML = tasks.map(t => `
+                <div class="task-card priority-${(t.priority || '').toLowerCase()}">
+                    <div class="task-header">
+                        <h3>${t.name}</h3>
+                        <span class="badge badge-${(t.priority || 'medium').toLowerCase()}">${t.priority || 'Medium'}</span>
+                    </div>
+                    <p class="task-description">${t.description || 'No description'}</p>
+                    <div class="task-meta">
+                        <span><i class="fas fa-clock"></i> ${t.estimatedDuration || 0}h</span>
+                        <span><i class="fas fa-calendar"></i> ${t.plannedStartDate || 'Not set'}</span>
+                        <span class="status-${(t.status || '').toLowerCase().replace(' ', '_')}">
+                            <i class="fas fa-info-circle"></i> ${t.status || 'Planned'}
+                        </span>
+                        ${t.assigneeId ? `<span style="color: #10b981;"><i class="fas fa-user-check"></i> Assigned (ID: ${t.assigneeId})</span>` : '<span style="color: #f59e0b;"><i class="fas fa-user-times"></i> Unassigned</span>'}
+                    </div>
+                    ${t.requiredSkills && t.requiredSkills.length > 0 ? `
+                    <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px;">
+                        <span style="font-size: 12px; color: #6b7280; margin-right: 4px;">Required Skills:</span>
+                        ${t.requiredSkills.map(skillId => `<span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-size: 11px;">ID: ${skillId}</span>`).join('')}
+                    </div>
+                    ` : ''}
+                    <div class="task-actions">
+                        <button class="btn-assign" onclick="assignTask(${t.id})">
+                            <i class="fas fa-user-plus"></i> Assign
+                        </button>
+                        <button class="btn-edit" onclick="openEditTaskModal(${t.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-delete" onclick="deleteTask(${t.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterTasks() {
+            const priority = document.getElementById('filter-priority').value;
+            const status = document.getElementById('filter-status').value;
+
+            let filtered = allTasks;
+            if (priority) filtered = filtered.filter(t => t.priority === priority);
+            if (status) filtered = filtered.filter(t => t.status === status);
+
+            displayTasks(filtered);
+        }
+
+        async function assignTask(taskId) {
+            // Load members to show selection
+            try {
+                const members = await API.getAllMembers();
+                
+                // Create a selection dialog
+                let memberOptions = members.map(m => 
+                    `${m.id}: ${m.firstName} ${m.lastName} (Load: ${m.currentLoad || 0}h, Remaining: ${m.remainingHours || 40}h)`
+                ).join('\n');
+                
+                const selection = prompt(
+                    'Select Member ID to assign this task:\n\nAvailable Members:\n' + memberOptions + '\n\nEnter Member ID:'
+                );
+                
+                if (selection) {
+                    const memberId = parseInt(selection);
+                    const response = await fetch(`http://localhost:8080/mini_projet/api/tasks/assign?taskId=${taskId}&memberId=${memberId}`, {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        let message = '✅ Task assigned successfully!\n';
+                        message += `Member Load: ${result.memberLoad}h\n`;
+                        message += `Remaining Hours: ${result.remainingHours}h`;
+                        
+                        if (result.isOverloaded) {
+                            message += '\n\n⚠️ WARNING: Member is now OVERLOADED!';
+                            if (result.overloadAlert) {
+                                message += '\n' + result.overloadAlert;
+                            }
+                        }
+                        
+                        alert(message);
+                        loadTasks();
+                    } else {
+                        alert('❌ Error: ' + (result.error || 'Assignment failed'));
+                    }
+                }
+            } catch (error) {
+                alert('❌ Error assigning task: ' + error.message);
+            }
+        }
+
+        async function deleteTask(id) {
+            if (confirm('Delete this task?')) {
+                try {
+                    await API.deleteTask(id);
+                    loadTasks();
+                } catch (error) {
+                    alert('Error deleting task');
+                }
+            }
+        }
+
+        async function runAutoAssignment() {
+            try {
+                const result = await API.autoAssignTasks();
+                if (result) {
+                    let message = '✅ Auto assignment completed!\n\n';
+                    message += 'Assigned: ' + result.successCount + '\n';
+                    message += 'Failed: ' + (result.failureCount || 0);
+                    
+                    if (result.messages && result.messages.length > 0) {
+                        message += '\n\nDetails:\n' + result.messages.slice(0, 5).join('\n');
+                    }
+                    
+                    alert(message);
+                    loadTasks();
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Scenario 5: Add urgent task mid-project
+        async function createUrgentTask() {
+            // Show the modal with high priority pre-selected
+            openModal('add-task-modal');
+            
+            // Set priority to High
+            document.getElementById('priority').value = 'High';
+            
+            // Add visual indicator that this is urgent
+            const modalTitle = document.querySelector('#add-task-modal .modal-header h2');
+            if (modalTitle) {
+                modalTitle.innerHTML = '⚡ Create Urgent Task';
+            }
+            
+            alert('Creating an URGENT task.\n\nAfter creation, use "🤖 Auto Assignment" to intelligently assign it based on skills and workload balance.');
+        }
+
+        // Mark task as urgent and reassign (Scenario 5)
+        async function markAsUrgent(taskId) {
+            try {
+                const result = await API.assignUrgentTask(taskId);
+                if (result) {
+                    let message = '⚡ Urgent task reassigned!\n\n';
+                    message += 'Assigned: ' + result.successCount + '\n';
+                    
+                    if (result.messages && result.messages.length > 0) {
+                        message += '\nDetails:\n' + result.messages.join('\n');
+                    }
+                    
+                    if (result.alerts && result.alerts.length > 0) {
+                        message += '\n\n⚠️ Alerts generated!';
+                    }
+                    
+                    alert(message);
+                    loadTasks();
+                } else {
+                    alert('❌ Could not reassign urgent task');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadTasks();
+
+            // Add task form submission handler
+            document.getElementById('add-task-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                // Get selected skill IDs
+                const selectedSkillIds = selectedSkills.map(s => s.id);
+
+                // Read dates
+                const startDateStr = document.getElementById('plannedStartDate').value || null;
+                const endDateStr = document.getElementById('plannedEndDate').value || null;
+
+                // Validate date order client-side
+                if (startDateStr && endDateStr) {
+                    const start = new Date(startDateStr);
+                    const end = new Date(endDateStr);
+                    if (end < start) {
+                        alert('❌ End date cannot be before start date.');
+                        return;
+                    }
+                }
+
+                const taskData = {
+                    projectId: parseInt(document.getElementById('projectId').value) || null,
+                    name: document.getElementById('name').value.trim(),
+                    description: document.getElementById('description').value.trim(),
+                    estimatedDuration: parseFloat(document.getElementById('estimatedDuration').value) || 0,
+                    priority: document.getElementById('priority').value,
+                    plannedStartDate: startDateStr,
+                    plannedEndDate: endDateStr,
+                    status: 'Planned',
+                    requiredSkills: selectedSkillIds
+                };
+
+                if (!taskData.name) {
+                    alert('⚠️ Task name is required!');
+                    return;
+                }
+
+                try {
+                    const result = await API.createTask(taskData);
+                    if (result) {
+                        alert('✅ Task created successfully!');
+                        closeModal('add-task-modal');
+                        this.reset();
+                        loadTasks();
+                    } else {
+                        alert('❌ Error creating task');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Server error: ' + (error?.message || 'Unknown error'));
+                }
+            });
+
+            // Keep end date >= start date by adjusting min dynamically
+            const startInput = document.getElementById('plannedStartDate');
+            const endInput = document.getElementById('plannedEndDate');
+            if (startInput && endInput) {
+                startInput.addEventListener('change', function () {
+                    endInput.min = startInput.value || '';
+                    if (endInput.value && startInput.value && endInput.value < startInput.value) {
+                        endInput.value = startInput.value;
+                    }
+                });
+                endInput.addEventListener('change', function () {
+                    if (startInput.value && endInput.value < startInput.value) {
+                        alert('❌ End date cannot be before start date.');
+                        endInput.value = startInput.value;
+                    }
+                });
+            }
+
+            // Edit task form submission handler
+            const editForm = document.getElementById('edit-task-form');
+            if (editForm) {
+                editForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    await saveEditedTask(formData);
+                });
+
+                // Setup edit skill search
+                setupEditSkillSearch();
+
+                // Dynamic date validation for edit form
+                const editStartInput = document.getElementById('edit-plannedStartDate');
+                const editEndInput = document.getElementById('edit-plannedEndDate');
+                if (editStartInput && editEndInput) {
+                    editStartInput.addEventListener('change', function () {
+                        editEndInput.min = editStartInput.value || '';
+                        if (editEndInput.value && editStartInput.value && editEndInput.value < editStartInput.value) {
+                            editEndInput.value = editStartInput.value;
+                        }
+                    });
+                    editEndInput.addEventListener('change', function () {
+                        if (editStartInput.value && editEndInput.value < editStartInput.value) {
+                            alert('❌ End date cannot be before start date.');
+                            editEndInput.value = editStartInput.value;
+                        }
+                    });
+                }
+            }
+        });
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login-page.html';
+        }
+
+        async function openEditTaskModal(taskId) {
+            try {
+                const response = await fetch(`http://localhost:8080/mini_projet/api/tasks?id=${taskId}`);
+                const task = await response.json();
+
+                // Populate form fields
+                document.getElementById('edit-task-id').value = task.id;
+                document.getElementById('edit-name').value = task.name || '';
+                document.getElementById('edit-description').value = task.description || '';
+                document.getElementById('edit-estimatedDuration').value = task.estimatedDuration || '';
+                document.getElementById('edit-priority').value = task.priority || 'Medium';
+                document.getElementById('edit-status').value = task.status || 'Planned';
+                document.getElementById('edit-projectId').value = task.projectId || '';
+                document.getElementById('edit-plannedStartDate').value = task.plannedStartDate || '';
+                document.getElementById('edit-plannedEndDate').value = task.plannedEndDate || '';
+
+                // Load projects
+                await loadEditProjectsDropdown();
+                
+                // Load and display current required skills
+                await loadEditSkillsForSearch();
+                editSelectedSkills = task.requiredSkills && task.requiredSkills.length > 0 
+                    ? allSkills.filter(s => task.requiredSkills.includes(s.id))
+                    : [];
+                updateEditSelectedSkillsDisplay();
+
+                openModal('edit-task-modal');
+            } catch (error) {
+                alert('❌ Error loading task: ' + error.message);
+            }
+        }
+
+        async function loadEditProjectsDropdown() {
+            const select = document.getElementById('edit-projectId');
+            try {
+                const projects = await API.getAllProjects();
+                select.innerHTML = '<option value="">-- Select a project --</option>';
+                projects.forEach(p => {
+                    select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        async function loadEditSkillsForSearch() {
+            try {
+                allSkills = await API.getAllSkills();
+            } catch (error) {
+                console.error('Error loading skills:', error);
+            }
+        }
+
+        let editSelectedSkills = [];
+
+        function updateEditSelectedSkillsDisplay() {
+            const container = document.getElementById('edit-selected-skills');
+            
+            if (editSelectedSkills.length === 0) {
+                container.innerHTML = '<span style="color: #9ca3af; font-size: 13px;">No skills selected yet</span>';
+                return;
+            }
+
+            container.innerHTML = editSelectedSkills.map(skill => `
+                <div style="display: flex; align-items: center; gap: 6px; background: #00a6c0; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px;">
+                    <span>${skill.name}</span>
+                    <button type="button" onclick="removeEditSkill(${skill.id})" style="background: none; border: none; color: white; cursor: pointer; font-weight: bold;">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removeEditSkill(skillId) {
+            editSelectedSkills = editSelectedSkills.filter(s => s.id !== skillId);
+            updateEditSelectedSkillsDisplay();
+        }
+
+        function setupEditSkillSearch() {
+            const searchInput = document.getElementById('edit-skill-search');
+            const dropdown = document.getElementById('edit-skill-dropdown');
+
+            if (!searchInput) return;
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                
+                if (query.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                const filtered = allSkills.filter(skill =>
+                    skill.name.toLowerCase().includes(query) &&
+                    !editSelectedSkills.some(s => s.id === skill.id)
+                );
+
+                if (filtered.length === 0) {
+                    dropdown.innerHTML = '<div style="padding: 10px; color: #9ca3af;">No matching skills</div>';
+                } else {
+                    dropdown.innerHTML = filtered.map(skill => `
+                        <div onclick="addEditSkill(${skill.id}, '${skill.name}')" 
+                             style="padding: 10px; cursor: pointer; border-bottom: 1px solid #e5e7eb; hover: background #f3f4f6;">
+                            ${skill.name}
+                        </div>
+                    `).join('');
+                }
+                dropdown.style.display = 'block';
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.form-group') && dropdown) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+
+        function addEditSkill(skillId, skillName) {
+            if (!editSelectedSkills.some(s => s.id === skillId)) {
+                editSelectedSkills.push({ id: skillId, name: skillName });
+                updateEditSelectedSkillsDisplay();
+            }
+            document.getElementById('edit-skill-search').value = '';
+            document.getElementById('edit-skill-dropdown').style.display = 'none';
+        }
+
+        async function saveEditedTask(formData) {
+            try {
+                const taskId = parseInt(formData.get('id'));
+                const startDateStr = formData.get('plannedStartDate') || null;
+                const endDateStr = formData.get('plannedEndDate') || null;
+
+                // Validate date order
+                if (startDateStr && endDateStr) {
+                    const start = new Date(startDateStr);
+                    const end = new Date(endDateStr);
+                    if (end < start) {
+                        alert('❌ End date cannot be before start date.');
+                        return;
+                    }
+                }
+
+                const requiredSkillIds = editSelectedSkills.map(s => s.id);
+
+                const taskData = {
+                    id: taskId,
+                    name: formData.get('name').trim(),
+                    description: formData.get('description').trim(),
+                    estimatedDuration: parseFloat(formData.get('estimatedDuration')) || 0,
+                    priority: formData.get('priority'),
+                    status: formData.get('status'),
+                    projectId: parseInt(formData.get('projectId')) || null,
+                    plannedStartDate: startDateStr,
+                    plannedEndDate: endDateStr,
+                    requiredSkills: requiredSkillIds
+                };
+
+                const response = await fetch('http://localhost:8080/mini_projet/api/tasks', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(taskData)
+                });
+
+                if (response.ok) {
+                    alert('✅ Task updated successfully!');
+                    closeModal('edit-task-modal');
+                    loadTasks();
+                } else {
+                    const error = await response.text();
+                    alert('❌ Error: ' + error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Server error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

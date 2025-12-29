@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts - TaskFlow</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .alerts-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        #alerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .alert-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: start;
+            gap: 16px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .alert-card.severity-critical {
+            border-left-color: #ef4444;
+        }
+
+        .alert-card.severity-high {
+            border-left-color: #f59e0b;
+        }
+
+        .alert-card.severity-medium {
+            border-left-color: #3b82f6;
+        }
+
+        .alert-card.severity-low {
+            border-left-color: #10b981;
+        }
+
+        .alert-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-icon.critical {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .alert-icon.high {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .alert-icon.medium {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .alert-icon.low {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .alert-type {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 16px;
+        }
+
+        .alert-date {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .alert-message {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-critical {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-high {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .badge-medium {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .badge-low {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+            font-size: 16px;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard-page.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects-page.html" class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="tasks-page.html" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="members-page.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="teams-page.html" class="nav-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Teams</span>
+            </a>
+            <a href="timeline.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="alerts-page.html" class="nav-item active">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="settings-page.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile-page.html" class="nav-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="alerts-container">
+            <div class="page-header">
+                <h1><i class="fas fa-bell"></i> System Alerts</h1>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>Severity</label>
+                    <select id="filter-severity" onchange="filterAlerts()">
+                        <option value="">All</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Type</label>
+                    <select id="filter-type" onchange="filterAlerts()">
+                        <option value="">All</option>
+                        <option value="overload">Overload</option>
+                        <option value="deadline">Deadline</option>
+                        <option value="unassigned">Unassigned Task</option>
+                        <option value="system">System</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="alerts-list">
+                <!-- Alerts will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/error-handler.js"></script>
+    <script src="../js/api-client.js"></script>
+    <script>
+        let allAlerts = [];
+
+        function getAlertIcon(type) {
+            switch (type?.toLowerCase()) {
+                case 'overload': return 'fa-weight-hanging';
+                case 'deadline': return 'fa-clock';
+                case 'unassigned': return 'fa-user-slash';
+                default: return 'fa-exclamation-triangle';
+            }
+        }
+
+        async function loadAlerts() {
+            const container = document.getElementById('alerts-list');
+            try {
+                allAlerts = await API.getAllAlerts();
+                displayAlerts(allAlerts);
+            } catch (error) {
+                console.error('Error loading alerts:', error);
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><p>Error loading alerts</p></div>';
+            }
+        }
+
+        function displayAlerts(alerts) {
+            const container = document.getElementById('alerts-list');
+
+            if (alerts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                        <p>No alerts! Everything is running smoothly.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = alerts.map(alert => {
+                const severity = (alert.severityLevel || 'medium').toLowerCase();
+                return `
+                    <div class="alert-card severity-${severity}">
+                        <div class="alert-icon ${severity}">
+                            <i class="fas ${getAlertIcon(alert.type)}"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-header">
+                                <span class="alert-type">${alert.type || 'System Alert'}</span>
+                                <span class="alert-date">
+                                    <i class="fas fa-calendar"></i> ${alert.issuedDate || 'N/A'}
+                                </span>
+                            </div>
+                            <p class="alert-message">${alert.message || 'No message'}</p>
+                        </div>
+                        <span class="badge badge-${severity}">${alert.severityLevel || 'Medium'}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterAlerts() {
+            const severity = document.getElementById('filter-severity').value.toLowerCase();
+            const type = document.getElementById('filter-type').value.toLowerCase();
+
+            let filtered = allAlerts;
+            
+            // Case-insensitive filtering for severity
+            if (severity) {
+                filtered = filtered.filter(a => 
+                    (a.severityLevel || '').toLowerCase() === severity
+                );
+            }
+            
+            // Case-insensitive filtering for type
+            if (type) {
+                filtered = filtered.filter(a => 
+                    (a.type || '').toLowerCase() === type
+                );
+            }
+
+            displayAlerts(filtered);
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login-page.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAlerts);
+    </script>
+</body>
+
+</html>

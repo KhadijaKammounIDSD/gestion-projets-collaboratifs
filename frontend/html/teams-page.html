@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams - TaskFlow</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .teams-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 195, 220, 0.3);
+        }
+
+        #teams-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-card.expanded {
+            cursor: default;
+        }
+
+        .team-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .team-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .team-card h3 {
+            font-size: 20px;
+            color: #1f2937;
+        }
+
+        .team-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00a6c0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .member-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: #1f2937;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Team Details Styles */
+        .team-details {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            display: none;
+        }
+
+        .team-details.visible {
+            display: block;
+        }
+
+        .details-section {
+            margin-bottom: 20px;
+        }
+
+        .details-section h4 {
+            font-size: 14px;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .member-list-item {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .member-list-item .name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .member-list-item .role {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .member-list-item .skills {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .skill-tag {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .task-list-item {
+            background: #fef3c7;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .task-list-item .task-name {
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .task-list-item .assignee {
+            font-size: 11px;
+            color: #78350f;
+            margin-top: 4px;
+        }
+
+        .btn-add-member {
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .empty-message {
+            color: #9ca3af;
+            font-size: 13px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard-page.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects-page.html" class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="tasks-page.html" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="members-page.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="teams-page.html" class="nav-item active">
+                <i class="fas fa-user-friends"></i>
+                <span>Teams</span>
+            </a>
+            <a href="timeline.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="alerts-page.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="settings-page.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile-page.html" class="nav-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="teams-container">
+            <div class="page-header">
+                <h1><i class="fas fa-user-friends"></i> Team Management</h1>
+                <button class="btn-add" onclick="openModal('add-team-modal')">
+                    <i class="fas fa-plus"></i> Create Team
+                </button>
+            </div>
+
+            <div id="teams-list">
+                <!-- Teams will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Team Modal -->
+    <div id="add-team-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Team</h2>
+                <button class="btn-close" onclick="closeModal('add-team-modal')">&times;</button>
+            </div>
+
+            <form id="add-team-form">
+                <div class="form-group">
+                    <label for="team-name">Team Name *</label>
+                    <input type="text" id="team-name" name="name" required placeholder="Enter team name">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('add-team-modal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Create
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Member to Team Modal -->
+    <div id="add-member-to-team-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Member to Team</h2>
+                <button class="btn-close" onclick="closeModal('add-member-to-team-modal')">&times;</button>
+            </div>
+
+            <form id="add-member-to-team-form">
+                <input type="hidden" id="target-team-id" name="teamId">
+                <div class="form-group">
+                    <label for="select-member">Select Member *</label>
+                    <select id="select-member" name="memberId" required>
+                        <option value="">-- Choose a member --</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('add-member-to-team-modal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Add to Team
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api-client.js"></script>
+    <script>
+        let allMembers = [];
+        let allTasks = [];
+        
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        async function loadTeamsAndMembers() {
+            const container = document.getElementById('teams-list');
+            try {
+                // Use cache-busting timestamp to ensure fresh data from database
+                const timestamp = new Date().getTime();
+                const [teams, members, tasks] = await Promise.all([
+                    fetch(`${API_BASE_URL}/teams?_t=${timestamp}`).then(r => r.json()),
+                    fetch(`${API_BASE_URL}/members?_t=${timestamp}`).then(r => r.json()),
+                    fetch(`${API_BASE_URL}/tasks?_t=${timestamp}`).then(r => r.json())
+                ]);
+                
+                allMembers = members;
+                allTasks = tasks;
+                
+                if (teams.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No teams yet. Click "Create Team" to get started.</p></div>';
+                    return;
+                }
+                
+                container.innerHTML = teams.map(team => {
+                    const teamMembers = members.filter(m => m.teamId === team.id);
+                    const avgLoad = teamMembers.length > 0
+                        ? (teamMembers.reduce((sum, m) => sum + (m.currentLoad || 0), 0) / teamMembers.length).toFixed(1)
+                        : 0;
+                    
+                    return `
+                        <div class="team-card" data-team-id="${team.id}" onclick="toggleTeamDetails(${team.id})">
+                            <div class="team-header">
+                                <div class="team-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>${team.name}</h3>
+                            </div>
+                            <div class="team-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">${teamMembers.length}</div>
+                                    <div class="stat-label">Members</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">${avgLoad}h</div>
+                                    <div class="stat-label">Avg Load</div>
+                                </div>
+                            </div>
+                            <div class="team-members">
+                                ${teamMembers.slice(0, 6).map(m => `
+                                    <div class="member-avatar" title="${m.firstName} ${m.lastName}">
+                                        ${(m.firstName || '?').charAt(0)}${(m.lastName || '?').charAt(0)}
+                                    </div>
+                                `).join('')}
+                                ${teamMembers.length > 6 ? `<div class="member-avatar">+${teamMembers.length - 6}</div>` : ''}
+                            </div>
+                            
+                            <div class="team-details" id="team-details-${team.id}">
+                                <div class="details-section">
+                                    <h4><i class="fas fa-users"></i> Team Members & Skills</h4>
+                                    <div id="team-members-${team.id}">
+                                        ${teamMembers.length > 0 ? 
+                                            teamMembers.map(member => `
+                                                <div class="member-list-item">
+                                                    <div>
+                                                        <div class="name">${member.firstName} ${member.lastName}</div>
+                                                        <div class="role">${member.role || 'N/A'} - ${(member.currentLoad || 0).toFixed(1)}h load</div>
+                                                        <div class="skills">
+                                                            ${member.memberSkills && member.memberSkills.length > 0 ?
+                                                                member.memberSkills.map(ms => `<span class="skill-tag">${ms.skill?.name || 'Unknown'}</span>`).join('') :
+                                                                '<span class="empty-message">No skills</span>'
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `).join('') :
+                                            '<p class="empty-message">No members in this team yet</p>'
+                                        }
+                                    </div>
+                                    <button class="btn-add-member" onclick="event.stopPropagation(); openAddMemberToTeamModal(${team.id})">
+                                        <i class="fas fa-user-plus"></i> Add Member
+                                    </button>
+                                </div>
+                                
+                                <div class="details-section">
+                                    <h4><i class="fas fa-tasks"></i> Assigned Tasks</h4>
+                                    <div id="team-tasks-${team.id}">
+                                        ${getTeamTasks(team.id, teamMembers, tasks)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading teams:', error);
+                container.innerHTML = '<div class="empty-state">Error loading teams</div>';
+            }
+        }
+
+        function getTeamTasks(teamId, teamMembers, tasks) {
+            const memberIds = teamMembers.map(m => m.id);
+            const teamTasks = tasks.filter(t => t.assigneeId && memberIds.includes(t.assigneeId));
+            
+            if (teamTasks.length === 0) {
+                return '<p class="empty-message">No tasks assigned to team members yet</p>';
+            }
+            
+            return teamTasks.map(task => {
+                const assignee = teamMembers.find(m => m.id === task.assigneeId);
+                return `
+                    <div class="task-list-item">
+                        <div class="task-name">${task.name}</div>
+                        <div class="assignee">
+                            <i class="fas fa-user"></i> ${assignee ? `${assignee.firstName} ${assignee.lastName}` : 'Unknown'} 
+                            - ${task.estimatedDuration || 0}h
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleTeamDetails(teamId) {
+            const detailsDiv = document.getElementById(`team-details-${teamId}`);
+            const card = document.querySelector(`[data-team-id="${teamId}"]`);
+            
+            if (detailsDiv.classList.contains('visible')) {
+                detailsDiv.classList.remove('visible');
+                card.classList.remove('expanded');
+            } else {
+                // Close all other expanded cards
+                document.querySelectorAll('.team-details.visible').forEach(d => d.classList.remove('visible'));
+                document.querySelectorAll('.team-card.expanded').forEach(c => c.classList.remove('expanded'));
+                
+                detailsDiv.classList.add('visible');
+                card.classList.add('expanded');
+            }
+        }
+
+        async function openAddMemberToTeamModal(teamId) {
+            document.getElementById('target-team-id').value = teamId;
+            
+            // Populate member select with unassigned members and members from other teams
+            const select = document.getElementById('select-member');
+            select.innerHTML = '<option value="">-- Choose a member --</option>';
+            
+            allMembers.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.id;
+                option.textContent = `${member.firstName} ${member.lastName} ${member.teamId ? '(Currently in another team)' : '(No team)'}`;
+                select.appendChild(option);
+            });
+            
+            openModal('add-member-to-team-modal');
+        }
+
+        // Expose a global function to refresh teams page from anywhere
+        window.refreshTeamsPage = loadTeamsAndMembers;
+
+        // Listen for storage events to refresh when data changes
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'teamDataChanged') {
+                console.log('Team data changed, refreshing...');
+                loadTeamsAndMembers();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadTeamsAndMembers();
+
+            document.getElementById('add-team-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const name = document.getElementById('team-name').value.trim();
+                if (!name) {
+                    alert('⚠️ Team name is required!');
+                    return;
+                }
+                try {
+                    const result = await API.createTeam({ name });
+                    if (result) {
+                        alert('✅ Team created successfully!');
+                        closeModal('add-team-modal');
+                        this.reset();
+                        await loadTeamsAndMembers();
+                        // Broadcast refresh event
+                        localStorage.setItem('teamDataChanged', Date.now().toString());
+                    } else {
+                        alert('❌ Error creating team');
+                    }
+                } catch (error) {
+                    alert('❌ Server error: ' + error.message);
+                }
+            });
+
+            document.getElementById('add-member-to-team-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const memberId = parseInt(document.getElementById('select-member').value);
+                const teamId = parseInt(document.getElementById('target-team-id').value);
+                
+                if (!memberId || !teamId) {
+                    alert('⚠️ Please select a member!');
+                    return;
+                }
+                
+                try {
+                    // Get current member data
+                    const member = allMembers.find(m => m.id === memberId);
+                    if (!member) {
+                        alert('❌ Member not found!');
+                        return;
+                    }
+                    
+                    // Update member with new team
+                    member.teamId = teamId;
+                    const result = await API.updateMember(member);
+                    
+                    if (result) {
+                        alert('✅ Member added to team successfully!');
+                        closeModal('add-member-to-team-modal');
+                        this.reset();
+                        // Reload teams page
+                        await loadTeamsAndMembers();
+                        // Notify settings page if it exists
+                        if (window.opener && typeof window.opener.refreshSettingsPage === 'function') {
+                            window.opener.refreshSettingsPage();
+                        }
+                        // Broadcast refresh event
+                        localStorage.setItem('teamDataChanged', Date.now().toString());
+                    } else {
+                        alert('❌ Error adding member to team');
+                    }
+                } catch (error) {
+                    alert('❌ Server error: ' + error.message);
+                }
+            });
+        });
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login-page.html';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Project Management</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Boards</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-table"></i>
+                <span>Table</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Information</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <select class="header-select">
+                    <option>Workspace</option>
+                    <option>Personnel</option>
+                    <option>Équipe</option>
+                </select>
+                <select class="header-select">
+                    <option>Recent</option>
+                    <option>All</option>
+                    <option>Archivés</option>
+                </select>
+                <select class="header-select">
+                    <option>Favorites</option>
+                    <option>Mes favoris</option>
+                </select>
+                <select class="header-select">
+                    <option>Templates</option>
+                    <option>Mes templates</option>
+                </select>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search">
+                </div>
+                <button class="btn-create">Create</button>
+                <button class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Log out
+                </button>
+            </div>
+        </header>
+
+        <!-- User Profile -->
+        <div class="user-profile">
+            <div class="avatar">AG</div>
+            <h1>Latest Projects</h1>
+        </div>
+
+        <!-- Projects Cards -->
+        <div class="projects-cards">
+            <div class="project-card">
+                <div class="card-date">19/10/2025</div>
+                <div class="card-content">
+                    <div class="card-icon python-icon">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <h3>Python Project</h3>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-date">20/09/2025</div>
+                <div class="card-content">
+                    <div class="card-label">No Sql</div>
+                    <div class="card-icon mongo-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>mongoDB</h3>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-date">22/12/2025</div>
+                <div class="card-content">
+                    <div class="card-label">Development</div>
+                    <div class="card-icon web-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Dev Web</h3>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-date">+60 others</div>
+                <div class="card-content">
+                    <h3>Recent projects</h3>
+                </div>
+            </div>
+
+            <div class="view-all">
+                <a href="#">View all</a>
+            </div>
+        </div>
+
+        <!-- Task Management Section -->
+        <div class="task-section">
+            <div class="task-header">
+                <div class="task-tabs">
+                    <button class="tab-btn">
+                        <i class="fas fa-th-large"></i>
+                        Overview
+                    </button>
+                    <button class="tab-btn active">
+                        <i class="fas fa-list"></i>
+                        List
+                    </button>
+                    <button class="tab-btn">
+                        <i class="fas fa-plus"></i>
+                        View
+                    </button>
+                </div>
+                <div class="task-actions">
+                    <div class="search-tasks">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search">
+                    </div>
+                    <button class="btn-hide">
+                        <i class="fas fa-eye-slash"></i>
+                        Hide
+                    </button>
+                    <button class="btn-customize">Customize</button>
+                    <button class="btn-add-task">
+                        Add Task
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn-menu">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <button class="btn-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="task-filters">
+                <button class="filter-btn">
+                    <i class="fas fa-layer-group"></i>
+                    Group: Team 4
+                </button>
+                <button class="filter-btn">
+                    <i class="fas fa-tasks"></i>
+                    Subtasks: Collap
+                </button>
+                <button class="filter-btn">
+                    <i class="fas fa-columns"></i>
+                    Columns
+                </button>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i>
+                    Filt
+                </button>
+                <button class="filter-btn">
+                    <i class="fas fa-user-friends"></i>
+                    3 Me mode
+                </button>
+                <button class="filter-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Assi...
+                </button>
+                <button class="filter-btn active">
+                    <i class="fas fa-check-circle"></i>
+                    Show closed
+                </button>
+                <button class="filter-btn">Hide</button>
+                <input type="text" placeholder="Search tasks..." class="search-tasks-input">
+            </div>
+
+            <!-- Project Tasks -->
+            <div class="project-section">
+                <div class="project-header">
+                    <i class="fas fa-chevron-down"></i>
+                    <span class="project-date">19/10/2025</span>
+                    <h2>Python Project</h2>
+                    <button class="btn-more">...</button>
+                    <button class="btn-expand">
+                        <i class="far fa-square"></i>
+                    </button>
+                </div>
+
+                <div class="tasks-list">
+                    <div class="task-list-header">
+                        <div class="task-status">
+                            <i class="far fa-circle"></i>
+                            <span>TO DO</span>
+                            <span class="task-count">3</span>
+                            <button class="btn-more-small">...</button>
+                            <button class="btn-add-task-small">
+                                <i class="fas fa-plus"></i>
+                                Add Task
+                            </button>
+                        </div>
+                        <div class="task-columns">
+                            <div class="column">Name</div>
+                            <div class="column">Assignee</div>
+                            <div class="column">Due date</div>
+                            <div class="column">Status</div>
+                            <div class="column"></div>
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="task-name">
+                            <input type="checkbox" class="task-checkbox">
+                            <span>Khadija Kammoun</span>
+                        </div>
+                        <div class="task-assignee">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="task-date">
+                            <i class="far fa-calendar"></i>
+                        </div>
+                        <div class="task-status-badge">
+                            <span class="status-todo">TO DO</span>
+                        </div>
+                        <div class="task-actions-menu">
+                            <button class="btn-more-small">...</button>
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="task-name">
+                            <input type="checkbox" class="task-checkbox">
+                            <span>Ayoub Kallel</span>
+                        </div>
+                        <div class="task-assignee">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="task-date">
+                            <i class="far fa-calendar"></i>
+                        </div>
+                        <div class="task-status-badge">
+                            <span class="status-todo">TO DO</span>
+                        </div>
+                        <div class="task-actions-menu">
+                            <button class="btn-more-small">...</button>
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="task-name">
+                            <input type="checkbox" class="task-checkbox">
+                            <span>Soulaimen Hentati</span>
+                        </div>
+                        <div class="task-assignee">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="task-date">
+                            <i class="far fa-calendar"></i>
+                        </div>
+                        <div class="task-status-badge">
+                            <span class="status-todo">TO DO</span>
+                        </div>
+                        <div class="task-actions-menu">
+                            <button class="btn-more-small">...</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Members Button -->
+            <div class="add-members">
+                <button class="btn-add-members">
+                    Add Members
+                    <span class="badge">3+</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/api-client.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Setup sidebar navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach((item, index) => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const pages = [
+                        'dashboard-page.html',  // Boards
+                        'members-page.html',    // Members
+                        'profile-page.html',    // Settings
+                        'tasks-page.html',      // Table
+                        'timeline.html',        // Calendar
+                        'dashboard-page.html',  // Notifications
+                        'dashboard-page.html'   // Information
+                    ];
+                    if (pages[index]) {
+                        window.location.href = pages[index];
+                    }
+                });
+            });
+
+            // Logout button
+            document.querySelector('.btn-logout').addEventListener('click', function () {
+                sessionStorage.removeItem('currentUser');
+                window.location.href = 'login-page.html';
+            });
+
+            // Display current user if logged in
+            const user = JSON.parse(sessionStorage.getItem('currentUser'));
+            if (user) {
+                const avatar = document.querySelector('.avatar');
+                if (avatar) {
+                    avatar.textContent = (user.firstName.charAt(0) + user.lastName.charAt(0)).toUpperCase();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

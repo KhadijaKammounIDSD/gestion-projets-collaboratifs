@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - TaskFlow</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-container {
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #00a6c0, #00c3dc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 42px;
+            font-weight: 600;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(0, 166, 192, 0.3);
+        }
+
+        .profile-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .profile-header .role-badge {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .profile-header .email {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        .profile-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-section h2 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-section h2 i {
+            color: #00a6c0;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .info-item i {
+            color: #00a6c0;
+            width: 20px;
+            text-align: center;
+        }
+
+        .info-item .label {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .info-item .value {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            color: #0369a1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .no-skills {
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00a6c0;
+        }
+
+        .stat-card .label {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .availability-badge.available {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .availability-badge.busy {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .team-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f3e8ff;
+            color: #7c3aed;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-mug-hot"></i>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard-page.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects-page.html" class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="tasks-page.html" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="members-page.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </a>
+            <a href="teams-page.html" class="nav-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Teams</span>
+            </a>
+            <a href="timeline.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Timeline</span>
+            </a>
+            <a href="alerts-page.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="settings-page.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile-page.html" class="nav-item active">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+            </div>
+        </header>
+
+        <!-- Profile Content -->
+        <div class="profile-container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar-large" id="profile-avatar">--</div>
+                <h1 id="profile-name">Loading...</h1>
+                <span class="role-badge" id="profile-role">Member</span>
+                <p class="email" id="profile-email">loading@example.com</p>
+                <span class="availability-badge available" id="profile-availability">
+                    <i class="fas fa-circle"></i> Available
+                </span>
+            </div>
+
+            <!-- Profile Sections -->
+            <div class="profile-sections">
+                <!-- Personal Info -->
+                <div class="profile-section">
+                    <h2><i class="fas fa-info-circle"></i> Personal Information</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <div class="label">Full Name</div>
+                                <div class="value" id="info-fullname">-</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <div class="label">Email Address</div>
+                                <div class="value" id="info-email">-</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <div class="label">Role</div>
+                                <div class="value" id="info-role">-</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <div class="label">Team</div>
+                                <div class="value" id="info-team">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="profile-section">
+                    <h2><i class="fas fa-star"></i> Skills</h2>
+                    <div class="skills-container" id="profile-skills">
+                        <span class="no-skills">Loading skills...</span>
+                    </div>
+
+                    <div style="margin-top: 12px; padding: 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px;">
+                            <label for="profile-skill-select" style="font-weight: 600; color: #1f2937;">Add a skill</label>
+                            <select id="profile-skill-select" style="min-width: 180px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px;">
+                                <option value="">Select a skill</option>
+                            </select>
+                            <button type="button" onclick="addSkillFromProfile()" style="background: #10b981; color: white; border: none; padding: 9px 14px; border-radius: 6px; font-weight: 600; cursor: pointer;">Add</button>
+                        </div>
+                        <small style="color: #6b7280;">Skills come directly from the database.</small>
+                    </div>
+                </div>
+
+                <!-- Work Statistics -->
+                <div class="profile-section">
+                    <h2><i class="fas fa-chart-bar"></i> Work Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="value" id="stat-workload">0h</div>
+                            <div class="label">Current Workload</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" id="stat-tasks">0</div>
+                            <div class="label">Assigned Tasks</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" id="stat-completed">0</div>
+                            <div class="label">Completed Tasks</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" id="stat-projects">0</div>
+                            <div class="label">Active Projects</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logout Section -->
+            <div class="profile-section" style="background: linear-gradient(135deg, #fee2e2, #fecaca); border: 2px solid #f87171; margin-top: 24px;">
+                <h2 style="color: #991b1b;"><i class="fas fa-sign-out-alt"></i> Account Actions</h2>
+                <p style="color: #7f1d1d; margin-bottom: 20px; font-size: 14px;">You can safely log out of your account. Your data is saved automatically.</p>
+                <button onclick="logout()" style="width: 100%; background: linear-gradient(135deg, #dc2626, #ef4444); color: white; border: none; padding: 16px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(220, 38, 38, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(220, 38, 38, 0.3)'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/mini_projet/api';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadProfileDataFromDB();
+            await loadAvailableSkillsForProfile();
+        });
+
+        async function loadProfileDataFromDB() {
+            try {
+                // Try to get logged in user
+                const userData = sessionStorage.getItem('user');
+                let memberId = null;
+                
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    memberId = user.id;
+                }
+                
+                // If no logged in user, try to load the first member for demo
+                if (!memberId) {
+                    const membersRes = await fetch(`${API_BASE_URL}/members`);
+                    const members = await membersRes.json();
+                    if (members.length > 0) {
+                        memberId = members[0].id;
+                    }
+                }
+                
+                if (!memberId) {
+                    showDefaultProfile();
+                    return;
+                }
+                
+                // Load member data
+                const response = await fetch(`${API_BASE_URL}/members?id=${memberId}`);
+                if (!response.ok) {
+                    showDefaultProfile();
+                    return;
+                }
+                
+                const member = await response.json();
+                window.profileMemberId = memberId;
+                displayProfile(member);
+                
+                // Load member's tasks stats
+                await loadMemberStats(memberId);
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showDefaultProfile();
+            }
+        }
+
+        function displayProfile(member) {
+            const firstName = member.firstName || '';
+            const lastName = member.lastName || '';
+            const initials = `${firstName.charAt(0)}${lastName.charAt(0)}` || 'UN';
+            
+            // Update header
+            document.getElementById('profile-avatar').textContent = initials.toUpperCase();
+            document.getElementById('profile-name').textContent = `${firstName} ${lastName}`.trim() || 'Unknown User';
+            document.getElementById('profile-role').textContent = member.role || 'Team Member';
+            document.getElementById('profile-email').textContent = member.email || 'No email';
+            
+            // Update availability
+            const availBadge = document.getElementById('profile-availability');
+            if (member.available) {
+                availBadge.className = 'availability-badge available';
+                availBadge.innerHTML = '<i class="fas fa-circle"></i> Available';
+            } else {
+                availBadge.className = 'availability-badge busy';
+                availBadge.innerHTML = '<i class="fas fa-circle"></i> Busy';
+            }
+            
+            // Update info grid
+            document.getElementById('info-fullname').textContent = `${firstName} ${lastName}`.trim() || 'Unknown';
+            document.getElementById('info-email').textContent = member.email || 'No email';
+            document.getElementById('info-role').textContent = member.role || 'Not specified';
+            
+            // Load team name
+            if (member.teamId) {
+                loadTeamName(member.teamId);
+            } else {
+                document.getElementById('info-team').textContent = 'No team assigned';
+            }
+            
+            // Update workload
+            document.getElementById('stat-workload').textContent = `${(member.currentLoad || 0).toFixed(1)}h`;
+            
+            // Load skills
+            loadProfileSkills(member.id);
+        }
+
+        async function loadTeamName(teamId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/teams?id=${teamId}`);
+                if (response.ok) {
+                    const team = await response.json();
+                    document.getElementById('info-team').innerHTML = `
+                        <span class="team-badge">
+                            <i class="fas fa-users"></i> ${team.name}
+                        </span>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('info-team').textContent = 'Unknown team';
+            }
+        }
+
+        async function loadProfileSkills(memberId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/members?id=${memberId}`);
+                const member = await response.json();
+                
+                const container = document.getElementById('profile-skills');
+                
+                if (member.memberSkills && member.memberSkills.length > 0) {
+                    container.innerHTML = member.memberSkills.map(ms => {
+                        const safeName = ms.skill && ms.skill.name ? ms.skill.name : 'Unknown';
+                        return `
+                            <div class="skill-tag" style="display: inline-flex; align-items: center; gap: 8px; margin: 4px; padding: 8px 14px; background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0369a1; border-radius: 20px; font-size: 14px; font-weight: 500;">
+                                <span>${safeName}</span>
+                                <button type="button" onclick="removeSkillFromProfile(${ms.id})" style="background: none; border: none; color: #0369a1; cursor: pointer; padding: 0; font-size: 16px; line-height: 1;" title="Remove skill">&times;</button>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<span class="no-skills">No skills assigned yet</span>';
+                }
+            } catch (error) {
+                console.error('Error loading skills:', error);
+                document.getElementById('profile-skills').innerHTML = '<span class="no-skills">Could not load skills</span>';
+            }
+        }
+
+        async function loadAvailableSkillsForProfile() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/skills`);
+                const skills = await response.json();
+                const select = document.getElementById('profile-skill-select');
+                if (!select) return;
+                select.innerHTML = '<option value="">Select a skill</option>';
+                skills.forEach(skill => {
+                    const opt = document.createElement('option');
+                    opt.value = skill.id;
+                    opt.textContent = skill.name;
+                    select.appendChild(opt);
+                });
+            } catch (error) {
+                console.error('Error loading skills list:', error);
+            }
+        }
+
+        async function addSkillFromProfile() {
+            if (!window.profileMemberId) {
+                alert('Member not loaded yet.');
+                return;
+            }
+            const skillId = document.getElementById('profile-skill-select').value;
+            if (!skillId) {
+                alert('Please select a skill');
+                return;
+            }
+            try {
+                const resp = await fetch(`${API_BASE_URL}/member-skills`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        memberId: window.profileMemberId,
+                        skillId: parseInt(skillId)
+                    })
+                });
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({ error: 'Unknown error' }));
+                    alert(err.error || 'Failed to add skill');
+                    return;
+                }
+                document.getElementById('profile-skill-select').value = '';
+                await loadProfileSkills(window.profileMemberId);
+            } catch (error) {
+                console.error('Error adding skill:', error);
+                alert('Network error while adding skill');
+            }
+        }
+
+        async function removeSkillFromProfile(memberSkillId) {
+            if (!window.profileMemberId) return;
+            if (!confirm('Remove this skill?')) return;
+            try {
+                const resp = await fetch(`${API_BASE_URL}/member-skills?id=${memberSkillId}`, {
+                    method: 'DELETE'
+                });
+                if (!resp.ok) {
+                    alert('Failed to remove skill');
+                    return;
+                }
+                await loadProfileSkills(window.profileMemberId);
+            } catch (error) {
+                console.error('Error removing skill:', error);
+                alert('Network error while removing skill');
+            }
+        }
+
+        async function loadMemberStats(memberId) {
+            try {
+                // Load all tasks
+                const tasksRes = await fetch(`${API_BASE_URL}/tasks`);
+                const tasks = await tasksRes.json();
+                
+                // Count assigned tasks
+                const assignedTasks = tasks.filter(t => t.assigneeId === memberId);
+                const completedTasks = assignedTasks.filter(t => 
+                    t.status && t.status.toLowerCase() === 'completed'
+                );
+                
+                document.getElementById('stat-tasks').textContent = assignedTasks.length;
+                document.getElementById('stat-completed').textContent = completedTasks.length;
+                
+                // Count active projects
+                const projectIds = [...new Set(assignedTasks.map(t => t.projectId).filter(id => id))];
+                document.getElementById('stat-projects').textContent = projectIds.length;
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        function showDefaultProfile() {
+            document.getElementById('profile-avatar').textContent = 'GU';
+            document.getElementById('profile-name').textContent = 'Guest User';
+            document.getElementById('profile-role').textContent = 'Visitor';
+            document.getElementById('profile-email').textContent = 'Not logged in';
+            document.getElementById('info-fullname').textContent = 'Guest User';
+            document.getElementById('info-email').textContent = 'Please log in to see your profile';
+            document.getElementById('info-role').textContent = 'N/A';
+            document.getElementById('info-team').textContent = 'N/A';
+            document.getElementById('profile-skills').innerHTML = '<span class="no-skills">Log in to see your skills</span>';
+        }
+
+        async function logout() {
+            try {
+                // Call backend to destroy session
+                await fetch(`${API_BASE_URL}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            
+            // Clear session storage
+            sessionStorage.clear();
+            
+            // Redirect to login page
+            window.location.href = 'login-page.html';
+        }
+    </script>
+</body>
+
+</html>
